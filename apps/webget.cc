@@ -8,17 +8,29 @@ using namespace std;
 
 void get_URL(const string &host, const string &path) {
     // Your code here.
-
+    Address address(host, "http"); 
+    //调用Socket.hh封装的Connect来与server建立连接
+    TCPSocket sock;
+    sock.connect(address);
+    //开始发送http报文,就是向socket套接字中写入
+    sock.write("GET " + path + " HTTP/1.1\r\n");
+    sock.write("Host: " + host + "\r\n");
+    sock.write("Connection: close\r\n");
+    sock.write("\r\n");
     // You will need to connect to the "http" service on
     // the computer whose name is in the "host" string,
     // then request the URL path given in the "path" string.
 
+    while(!sock.eof()) {
+        std::cout << sock.read();
+    }
+    sock.close();
     // Then you'll need to print out everything the server sends back,
     // (not just one call to read() -- everything) until you reach
     // the "eof" (end of file).
 
-    cerr << "Function called: get_URL(" << host << ", " << path << ").\n";
-    cerr << "Warning: get_URL() has not been implemented yet.\n";
+    // cerr << "Function called: get_URL(" << host << ", " << path << ").\n";
+    // cerr << "Warning: get_URL() has not been implemented yet.\n";
 }
 
 int main(int argc, char *argv[]) {
